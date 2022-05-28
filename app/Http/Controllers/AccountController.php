@@ -25,6 +25,7 @@ class AccountController extends Controller
     public function update(Request $request)
     {
         $this->validate($request, [
+            'student_id' => 'required|string',
             'first_name' => 'required|string',
             'last_name' => 'required|string',
             'email' => 'required|string|email|max:100',
@@ -32,6 +33,7 @@ class AccountController extends Controller
         ]);
         try {
             $user = auth()->user();
+            $user->student_id = $request->input('student_id');
             $user->first_name = $request->input('first_name');
             $user->last_name = $request->input('last_name');
             $user->email = $request->input('email');

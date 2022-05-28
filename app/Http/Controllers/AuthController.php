@@ -19,6 +19,7 @@ class AuthController extends Controller
     {
         // Are the proper fields present?
         $this->validate($request, [
+            'student_id' => 'required|string',
             'first_name' => 'required|string',
             'last_name' => 'required|string',
             'email' => 'required|string|email|max:100|unique:users',
@@ -26,6 +27,7 @@ class AuthController extends Controller
         ]);
         try {
             $user = new User();
+            $user->student_id = $request->input('student_id');
             $user->first_name = $request->input('first_name');
             $user->last_name = $request->input('last_name');
             $user->email = $request->input('email');

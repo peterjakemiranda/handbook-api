@@ -70,7 +70,7 @@ class AuthController extends Controller
         }
         if(auth()->user()->role == 'student' && auth()->user()->student_id != $request->get('student_id')) {
             // Login has failed
-            return response()->json(['message' => 'Unauthorized'], 401);
+            return response()->json(['message' => 'Invalid ID'], 401);
         }
 
         return $this->respondWithToken($token);

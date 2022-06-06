@@ -59,11 +59,16 @@ class AuthController extends Controller
     {
         // Are the proper fields present?
         $this->validate($request, [
+            'student_id' => 'required|string',
             'email' => 'required|string',
             'password' => 'required|string',
         ]);
         $credentials = $request->only(['email', 'password']);
         if (!$token = Auth::attempt($credentials, true)) {
+            // Login has failed
+            return response()->json(['message' => 'Unauthorized'], 401);
+        }
+        if(auth()->user()->role == 'student' && auth()->user()->student_id != $request->get('student_id')) {
             // Login has failed
             return response()->json(['message' => 'Unauthorized'], 401);
         }

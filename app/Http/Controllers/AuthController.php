@@ -59,7 +59,7 @@ class AuthController extends Controller
     {
         // Are the proper fields present?
         $this->validate($request, [
-            'student_id' => 'required|string',
+            'student_id' => 'nullable|string',
             'email' => 'required|string',
             'password' => 'required|string',
         ]);

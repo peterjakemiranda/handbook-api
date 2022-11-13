@@ -44,6 +44,12 @@ Route::group([
         Route::put('sections/{id}', 'SectionController@update');
         Route::delete('sections/{id}', 'SectionController@destroy');
 
+        Route::get('questions', 'QuestionController@index');
+        Route::post('questions', 'QuestionController@store');
+        Route::get('questions/{id}', 'QuestionController@show');
+        Route::put('questions/{id}', 'QuestionController@update');
+        Route::delete('questions/{id}', 'QuestionController@destroy');
+
         Route::get('bookmarks', 'BookmarkController@index');
         Route::post('bookmarks/{id}', 'BookmarkController@bookmark');
         Route::delete('bookmarks/{id}', 'BookmarkController@destroy');
@@ -52,6 +58,9 @@ Route::group([
         Route::post('refresh', 'AuthController@refresh');
         Route::get('account', 'AccountController@show');
         Route::put('account', 'AccountController@update');
+        Route::get('users', 'AccountController@index');
+        Route::get('users/{id}', 'AccountController@show');
+        Route::put('account/{id}', 'AccountController@update');
         // Route::post('content', 'AuthController@me')->middleware('roles:' . User::ROLE_ADMIN);
     });
 });

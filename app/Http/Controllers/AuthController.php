@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Tymon\JWTAuth\Exceptions\TokenInvalidException;
+use Illuminate\Support\Facades\Http;
 
 class AuthController extends Controller
 {
@@ -57,13 +58,45 @@ class AuthController extends Controller
      */
     public function login(Request $request)
     {
-        // Are the proper fields present?
-        $this->validate($request, [
-            'student_id' => 'nullable|string',
-            'email' => 'required|string',
-            'password' => 'required|string',
-        ]);
-        $credentials = $request->only(['email', 'password']);
+        if ($request->get('student_id') != 'admin') {
+            $client = new \GuzzleHttp\Client();
+            $response = $client->request('POST', 'https://bagocitycollege.com/BCCWeb/TPLoginAPI', [
+                'headers' => [
+                    'Accept'     => 'application/json',
+                ],
+                'form_params' => [
+                    'txtUserName' => $request->get('student_id'),
+                    'txtPassword' => $request->get('password'),
+                    'txtCallback' => '',
+                    'txtRequestId' => ''
+                ]
+            ]);
+            $data = json_decode($response->getBody(), true);
+            
+            if (!$data['is_valid']) {
+                // Login has failed
+                return response()->json(['message' => 'Unauthorized'], 401);
+            }
+
+            if (!User::where('student_id', $data['user_code'])->exists()) {
+                User::create([
+                    'student_id' => $data['user_code'],
+                    'first_name' => $data['first_name'],
+                    'last_name' => $data['last_name'],
+                    'password' => app('hash')->make($request->get('password')),
+                    'email' => $data['user_code'].'@bagocitycollege.com',
+                    'program_description' => $data['program_description'],
+                    'year_level' => $data['year_level'],
+                    'section' => $data['section'],
+                    'gender' => $data['gender'],
+                    'address' => $data['address'],
+                    'program_code' => $data['program_code'],
+                    'cp_number' => $data['cp_number'],
+                    'rfid' => $data['rfid'],
+                ]);
+            }
+        }
+        $credentials = $request->only(['student_id', 'password']);
         if (!$token = Auth::attempt($credentials, true)) {
             // Login has failed
             return response()->json(['message' => 'Unauthorized'], 401);

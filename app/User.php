@@ -57,6 +57,10 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
         'remember_token'
     ];
 
+    protected $appends = [
+        'chapter_access_count',
+    ];
+
     /**
      * Get the identifier that will be stored in the subject claim of the JWT.
      *
@@ -80,6 +84,16 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     public function bookmarks() : HasMany
     {
         return $this->hasMany(Bookmark::class, 'user_id');
+    }
+
+    public function answers(): HasMany
+    {
+        return $this->hasMany(StudentAnswer::class, 'student_id');
+    }
+
+    public function getChapterAccessCountAttribute()
+    {
+        return $this->answers()->count();
     }
     
 }

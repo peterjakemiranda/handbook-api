@@ -58,7 +58,8 @@ class AuthController extends Controller
      */
     public function login(Request $request)
     {
-        if ($request->get('student_id') != 'admin') {
+        $user = User::where('student_id', $request->get('student_id'))->first();
+        if (($user && $user->role != 'admin') || !$user) {
             $client = new \GuzzleHttp\Client();
             $response = $client->request('POST', 'https://bagocitycollege.com/BCCWeb/TPLoginAPI', [
                 'headers' => [
@@ -78,7 +79,7 @@ class AuthController extends Controller
                 return response()->json(['message' => 'Unauthorized'], 401);
             }
 
-            if (!User::where('student_id', $data['user_code'])->exists()) {
+            if (!$user) {
                 User::create([
                     'student_id' => $data['user_code'],
                     'first_name' => $data['first_name'],

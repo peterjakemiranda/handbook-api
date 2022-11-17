@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Chapter;
 use Illuminate\Http\Request;
+use App\StudentAnswer;
 
 class ChapterController extends Controller
 {
@@ -60,5 +61,11 @@ class ChapterController extends Controller
         $chapter->delete();
 
         return response()->json('chapter removed successfully');
+    }
+
+    public function answer(Request $request, $id)
+    {
+        StudentAnswer::updateOrCreate(['student_id' => auth()->id(), 'chapter_id' => $id]);
+        return response()->json('answer added successfully');
     }
 }

@@ -13,11 +13,17 @@ class AccountController extends Controller
 
     public function index(Request $request)
     {
-        $query = User::where('student_id', '!=', 'admin');
+        $query = User::where('role', '!=', 'admin');
         $this->setPagination($request->limit);
         $pagination = $query->paginate($this->getPagination());
 
         return $this->respondWithPagination($pagination, $pagination->items());
+    }
+
+    public function admins(Request $request)
+    {
+        $admins = User::where('role', 'admin')->get();
+        return response()->json($admins);
     }
 
     /**
@@ -41,15 +47,16 @@ class AccountController extends Controller
             'student_id' => 'required|string',
             'first_name' => 'required|string',
             'last_name' => 'required|string',
-            'password' => 'nullable|confirmed|string|min:4',
+            'password' => 'nullable|string|min:4',
         ]);
         try {
             $user = $id ? User::find($id) : new User();
             $user->student_id = $request->input('student_id');
             $user->first_name = $request->input('first_name');
             $user->last_name = $request->input('last_name');
+            $user->role = 'admin';
             if (!$user->email) {
-                $user->email = trim($request->input('student_id')).'@handbook.user';
+                $user->email = trim($request->input('student_id')).'@admin.com';
             }
             if($plainPassword = $request->input('password')){
                 $user->password = app('hash')->make($plainPassword);

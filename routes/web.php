@@ -37,6 +37,7 @@ Route::group([
         Route::get('chapters/{id}', 'ChapterController@show');
         Route::put('chapters/{id}', 'ChapterController@update');
         Route::delete('chapters/{id}', 'ChapterController@destroy');
+        Route::post('chapters/{id}/answer', 'ChapterController@answer');
 
         Route::get('sections', 'SectionController@index');
         Route::post('sections', 'SectionController@store');
@@ -59,6 +60,7 @@ Route::group([
         Route::get('account', 'AccountController@show');
         Route::put('account', 'AccountController@update');
         Route::get('users', 'AccountController@index');
+        Route::get('admins', 'AccountController@admins');
         Route::get('users/{id}', 'AccountController@show');
         Route::put('account/{id}', 'AccountController@update');
         // Route::post('content', 'AuthController@me')->middleware('roles:' . User::ROLE_ADMIN);

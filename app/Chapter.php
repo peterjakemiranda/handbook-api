@@ -26,7 +26,7 @@ class Chapter extends Model
 
     public function getNextChapterAttribute() 
     {
-        return static::where('id', '>', $this->id)->max('id');
+        return static::where('id', '>', $this->id)->min('id');
     }
 
     public function getPrevChapterAttribute() 

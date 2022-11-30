@@ -63,6 +63,8 @@ Route::group([
         Route::get('admins', 'AccountController@admins');
         Route::get('users/{id}', 'AccountController@show');
         Route::put('account/{id}', 'AccountController@update');
+        Route::post('send-sms', 'SmsController@send');
+        Route::post('update-parent-mobile', 'SmsController@updateParentMobile');
         // Route::post('content', 'AuthController@me')->middleware('roles:' . User::ROLE_ADMIN);
     });
 });

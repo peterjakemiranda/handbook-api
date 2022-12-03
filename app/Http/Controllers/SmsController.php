@@ -27,23 +27,17 @@ class SmsController extends Controller
             $user->parent_mobile = $request->get('mobile');
             $user->save();
             $client = new \GuzzleHttp\Client();
-            $response = $client->request('GET', 'https://sms.pagenet.info/admin/index.php', [
+            $response = $client->request('POST', 'https://app.mysms.ph/api/sms', [
                 'headers' => [
                     'Accept' => 'application/json',
+                    'Dc-Client-Id' => '97e37d5a-fe51-4774-85a5-5bc67063e6ed',
+                    'Dc-Client-Secret' => 'UoP6y1mU1CYXUkgKNXJsKEApriiT2nzUtV5PbDQk',
                 ],
-                'query' => [
-                    'route' => 'api/sms/send',
-                    'auth_key' => 'p6rV1tCjldQ05HCiuO8Zh5ZXtMSv44tIOG7bvHgC',
-                    'device_id' => 21,
-                    'sim_id' => 4,
-                    'mobile_no' => $request->get('mobile'),
-                    'data_type' => 'Plain',
-                    'message' => $request->get('message'),
+                'form_params' => [
+                    'destination' => $request->get('mobile'),
+                    'text' => $request->get('message'),
                 ]
             ]);
-            info('sms response', ['data' => $response]);
-            https://sms.pagenet.info/admin/index.php?route=api/sms/send&auth_key=p6rV1tCjldQ05HCiuO8Zh5ZXtMSv44tIOG7bvHgC&device_id=21&sim_id=99&mobile_no=09488005645&data_type=Plain&message=Hello+World
-            // https://sms.pagenet.info/admin/index.php?route=api/sms/send&auth_key=p6rV1tCjldQ05HCiuO8Zh5ZXtMSv44tIOG7bvHgC&device_id=18&sim_id=3&mobile_no=09665761200&data_type=Plain&message=Hello+World+test
         } catch (\Exception $e) {
             return response()->json(['message' => 'Failed Sending SMS'], 400);
         }

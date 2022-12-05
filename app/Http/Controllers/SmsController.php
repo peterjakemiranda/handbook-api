@@ -27,18 +27,22 @@ class SmsController extends Controller
             $user->parent_mobile = $request->get('mobile');
             $user->save();
             $client = new \GuzzleHttp\Client();
-            $response = $client->request("POST", "https://api.sms.fortres.net/v1/messages", [
-                "headers" => [
-                    "Content-type" => "application/json"
+            $response = $client->request('GET', 'https://sms.pagenet.info/admin/index.php', [
+                'headers' => [
+                    'Accept' => 'application/json',
                 ],
-                "auth" => ["48b65cb9-e518-4f2b-951c-b976214cb694", "ON5CGojnspUHVCpXvUcZ7xr9NloY6VxOlrqV4HQm"],
-                "json" => [
-                    "recipient" => $request->get('mobile'),
-                    "message" => $request->get('message')
+                'query' => [
+                    'route' => 'api/sms/send',
+                    'auth_key' => 'p6rV1tCjldQ05HCiuO8Zh5ZXtMSv44tIOG7bvHgC',
+                    'device_id' => 21,
+                    'sim_id' => 4,
+                    'mobile_no' => $request->get('mobile'),
+                    'data_type' => 'Plain',
+                    'message' => $request->get('message'),
                 ]
             ]);
+            info('sms response', ['data' => $response]);
         } catch (\Exception $e) {
-            info('exception', compact('e'));
             return response()->json(['message' => 'Failed Sending SMS'], 400);
         }
         return response()->json(['message' =>  'Successfully sent sms'], 200);

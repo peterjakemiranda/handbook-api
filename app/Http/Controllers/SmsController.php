@@ -27,18 +27,18 @@ class SmsController extends Controller
             $user->parent_mobile = $request->get('mobile');
             $user->save();
             $client = new \GuzzleHttp\Client();
-            $response = $client->request('POST', 'https://app.mysms.ph/api/sms', [
-                'headers' => [
-                    'Accept' => 'application/json',
-                    'Dc-Client-Id' => '97e37d5a-fe51-4774-85a5-5bc67063e6ed',
-                    'Dc-Client-Secret' => 'UoP6y1mU1CYXUkgKNXJsKEApriiT2nzUtV5PbDQk',
+            $response = $client->request("POST", "https://api.sms.fortres.net/v1/messages", [
+                "headers" => [
+                    "Content-type" => "application/json"
                 ],
-                'form_params' => [
-                    'destination' => $request->get('mobile'),
-                    'text' => $request->get('message'),
+                "auth" => ["48b65cb9-e518-4f2b-951c-b976214cb694", "ON5CGojnspUHVCpXvUcZ7xr9NloY6VxOlrqV4HQm"],
+                "json" => [
+                    "recipient" => $request->get('mobile'),
+                    "message" => $request->get('message')
                 ]
             ]);
         } catch (\Exception $e) {
+            info('exception', compact('e'));
             return response()->json(['message' => 'Failed Sending SMS'], 400);
         }
         return response()->json(['message' =>  'Successfully sent sms'], 200);

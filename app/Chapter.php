@@ -20,7 +20,6 @@ class Chapter extends Model
     protected $appends = [
         'prev_chapter',
         'next_chapter',
-        'access_count',
         'is_answered',
     ];
 
@@ -41,7 +40,9 @@ class Chapter extends Model
 
     public function getAccessCountAttribute()
     {
-        return $this->answers()->count();
+        return $this->answers()->whereHas('student', function($q) {
+            $q->where('role', 'user');
+        })->count();
     }
 
     public function getIsAnsweredAttribute()

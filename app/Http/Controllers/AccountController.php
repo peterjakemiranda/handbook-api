@@ -14,6 +14,11 @@ class AccountController extends Controller
     public function index(Request $request)
     {
         $query = User::where('role', '!=', 'admin');
+        if ($request->chapter_id) {
+            $query->whereHas('answers', function($q) use($request) {
+                $q->where('chapter_id', $request->chapter_id);
+            });
+        }
         $this->setPagination($request->limit);
         $pagination = $query->paginate($this->getPagination());
 

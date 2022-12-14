@@ -8,9 +8,14 @@ use App\StudentAnswer;
 
 class ChapterController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $chapters = Chapter::all();
+        if ($request->monitoring) {
+            $chapters->map(function($ch) {
+                $ch->append('access_count');
+            });
+        }
 
         return response()->json($chapters);
     }

@@ -57,6 +57,7 @@ Route::group([
 
         Route::post('logout', 'AuthController@logout');
         Route::post('refresh', 'AuthController@refresh');
+        Route::get('account-by-program', 'AccountController@byProgram');
         Route::get('account', 'AccountController@show');
         Route::put('account', 'AccountController@update');
         Route::get('users', 'AccountController@index');

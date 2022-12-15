@@ -6,6 +6,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\User;
 use App\Traits\ApiResponser;
+use Illuminate\Support\Facades\DB;
 
 class AccountController extends Controller
 {
@@ -23,6 +24,17 @@ class AccountController extends Controller
         $pagination = $query->paginate($this->getPagination());
 
         return $this->respondWithPagination($pagination, $pagination->items());
+    }
+
+    public function byProgram(Request $request)
+    {
+        $query = User::where('role', '!=', 'admin')
+            ->whereHas('answers')
+            ->select('program_description',DB::raw('count(*) as total'))
+            ->groupBy('program_description');
+
+        return response()->json($query->get());
+
     }
 
     public function admins(Request $request)
